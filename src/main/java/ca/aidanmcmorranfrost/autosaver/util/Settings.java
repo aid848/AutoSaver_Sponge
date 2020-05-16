@@ -36,7 +36,7 @@ public class Settings {
     private void setup() {
         // todo refactor to ENUM or constants and get root from safer operation than magic number
 
-        confNode.getNode("Basic", "Save Interval").setValue(-1).setComment("save interval in minutes (-1 to disable)");
+        confNode.getNode("Basic", "Save Interval").setValue(10).setComment("save interval in minutes (-1 to disable)");
         confNode.getNode("Basic", "Backup Path").setValue(configLocation.getAbsolutePath() + "\\backups\\").setComment("root folder for saved worlds");
         confNode.getNode("Basic", "Maximum Saves on Disk").setValue(10).setComment("Older saves will be deleted after limit reached!");
         String defaultWorldPath = config.getAbsolutePath().substring(0,config.getAbsolutePath().length()-29) + "\\world";

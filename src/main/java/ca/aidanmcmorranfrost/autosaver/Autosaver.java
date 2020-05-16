@@ -44,12 +44,6 @@ public class Autosaver {
     // make filename better
 
 
-    // * to test
-    // test task reoccurring functions
-    // test reload command
-    // test default config works and create more detailed info on path requirements for config folder
-    // test max number of saves
-
     @Listener
     public void onPreInit(GamePreInitializationEvent e) {
         conf = Settings.getInstance(file);
