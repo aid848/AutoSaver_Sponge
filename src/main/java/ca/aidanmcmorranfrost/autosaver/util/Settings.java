@@ -34,20 +34,21 @@ public class Settings {
 
 
     private void setup() {
-        // todo initial setup values but refactor to ENUM or constants pls
+        // todo refactor to ENUM or constants and get root from safer operation than magic number
 
-        confNode.getNode("Basic", "save interval").setValue(-1).setComment("save interval in minutes (-1 to disable)");
+        confNode.getNode("Basic", "Save Interval").setValue(-1).setComment("save interval in minutes (-1 to disable)");
         confNode.getNode("Basic", "Backup Path").setValue(configLocation.getAbsolutePath() + "\\backups\\").setComment("root folder for saved worlds");
-
-        //todo the world path is wrong it goes to the config path + world :(
-        // C:\\Users\\Aidan\\Desktop\\sponge test\\.\\config\\autosaver\\config.json\\world
+        confNode.getNode("Basic", "Maximum Saves on Disk").setValue(10).setComment("Older saves will be deleted after limit reached!");
         String defaultWorldPath = config.getAbsolutePath().substring(0,config.getAbsolutePath().length()-29) + "\\world";
         confNode.getNode("Basic", "World Path").setValue(defaultWorldPath).setComment("folder path for live world");
 
     }
 
-    public <T> void setSetting(String nodeName, T value) {
-        // todo
+
+    public <T> void setSetting(T value,@NonNull Object... nodeName) throws IOException {
+        loader = HoconConfigurationLoader.builder().setFile(config).build();
+        confNode = loader.load();
+        confNode.getNode(nodeName).setValue(value);
         save();
     }
 
@@ -90,7 +91,7 @@ public class Settings {
     }
 
     public void reload(){
-        //todo
+        load();
     }
 
 

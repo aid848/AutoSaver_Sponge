@@ -4,18 +4,14 @@ import ca.aidanmcmorranfrost.autosaver.command.AutoSaverCommands;
 import ca.aidanmcmorranfrost.autosaver.tasks.AutoSaverTasks;
 import ca.aidanmcmorranfrost.autosaver.util.Settings;
 import com.google.inject.Inject;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.plugin.Plugin;
 
-import javax.security.auth.login.Configuration;
 import java.io.File;
 
 
@@ -30,6 +26,8 @@ import java.io.File;
 )
 public class Autosaver {
 
+    AutoSaverCommands cmds;
+    AutoSaverTasks tsks;
 
     final Boolean DEBUG = true;
     static Settings conf;
@@ -44,18 +42,14 @@ public class Autosaver {
     // TODO
     // clean up zip structure to not include outer structure
     // make filename better
-    // enable task reoccurring functions
-    // max number of saves
-    // make command proper
-    // reload command
+
+
+    // * to test
+    // test task reoccurring functions
+    // test reload command
     // test default config works and create more detailed info on path requirements for config folder
+    // test max number of saves
 
-
-
-
-    //
-    // Sponge.getGame().getServer().copyWorld() // use for other plugin or something
-    //
     @Listener
     public void onPreInit(GamePreInitializationEvent e) {
         conf = Settings.getInstance(file);
@@ -64,10 +58,16 @@ public class Autosaver {
 
 
     @Listener
-    public void onServerStart(GameStartedServerEvent event) {
-//        Settings conf = new Settings();
-        AutoSaverCommands commands = new AutoSaverCommands(this, conf);
-        AutoSaverTasks tasks = new AutoSaverTasks(this, conf);
-
+    public void onServerStart(GameStartedServerEvent e) {
+        cmds = new AutoSaverCommands(this, conf);
+        tsks = new AutoSaverTasks(this, conf);
     }
+
+    @Listener
+    public void onReload(GameReloadEvent e) {
+        // todo refactor to reload method since command should have similar behavior
+        Settings.getInstance(null).reload();
+        AutoSaverTasks.reload();
+    }
+
 }

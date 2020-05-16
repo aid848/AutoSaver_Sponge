@@ -3,29 +3,37 @@ package ca.aidanmcmorranfrost.autosaver.tasks;
 import ca.aidanmcmorranfrost.autosaver.Autosaver;
 import ca.aidanmcmorranfrost.autosaver.util.Settings;
 import org.spongepowered.api.scheduler.Task;
-//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
+
 
 public class AutoSaverTasks {
 
-    List<Task.Builder> runningTasks;
+    static AutoSaverTasks self;
     Settings conf;
     Autosaver context;
-    List<Task.Builder> tasks;
+    List<Task> tasks;
 
-    public AutoSaverTasks(Autosaver a, Settings conf) {
+
+    public AutoSaverTasks(Autosaver a, Settings conf) { // todo change to singleton
         this.conf = conf;
         context = a;
-        tasks = new Stack<Task.Builder>();
+        self = this;
+        init();
+    }
 
-//        TestTask test = new TestTask(conf.getSetting(new String[]{"Basic", "save interval"}));
-        // todo create tasks here
+    private static void init() {
+        // create tasks here
+        self.tasks = new ArrayList<>();
+        ScheduledSaveTask.instantiate(self.context, self.tasks);
+    }
 
-
-
+    public static void reload() {
+        for (Task t: self.tasks) {
+            t.cancel();
+        }
+        init();
     }
 
     // TODO
